@@ -6,9 +6,4 @@ export default class Vector {
     this.x = x;
     this.y = y;
   }
-  distance(other: Vector): number {
-    return Math.sqrt(
-      Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2)
-    );
-  }
 }

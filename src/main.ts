@@ -87,6 +87,8 @@ export default class App {
   frameRequest = () => {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
     const currentTime = Date.now();
+
+    // feedback : 여기 변수명을 delta로 하는 것이 옳은 지?
     this.delta = (currentTime - this.startTime) * 0.001; // ms => s
 
     if (this.delta > 1) {
