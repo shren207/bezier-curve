@@ -49,7 +49,16 @@ export default class App {
   randomY(): number {
     return Math.floor(Math.random() * this.canvas.height);
   }
-  // bezierCurve(positions: Vector[], t: number): void {}
+  bezierCurve(positions: Vector[], t: number): void {
+    // recursive solution is necessary
+    if (positions.length < 2) {
+      return;
+    }
+    let newPositions: Vector[] = [];
+    // positions.forEach((position, index) => {
+    //
+    // }
+  }
 
   frameRequest = () => {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
