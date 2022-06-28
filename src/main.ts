@@ -1,24 +1,25 @@
-import './style.css'
-import Vector2 from "./Vector2";
+import "./style.css";
+import Vector from "./Vector";
 
-const app = document.querySelector<HTMLDivElement>('#app')!
+const app = document.querySelector<HTMLDivElement>("#app")!;
 
 app.innerHTML = `
   <h1>Bezier Curve</h1>
   <canvas></canvas>
-`
+`;
 
 export default class App {
   static instance: App;
 
   width: number = window.innerWidth / 2;
   height: number = window.innerHeight / 2;
-  canvas: HTMLCanvasElement = document.querySelector<HTMLCanvasElement>('canvas')!;
+  canvas: HTMLCanvasElement =
+    document.querySelector<HTMLCanvasElement>("canvas")!;
   context: CanvasRenderingContext2D;
   delta: number = 0;
   startTime: number;
   frameRequestHandle: number;
-  positions: Vector2[] = [];
+  positions: Vector[] = [];
 
   constructor() {
     App.instance = this; // Singleton Pattern
@@ -26,10 +27,17 @@ export default class App {
     this.canvas.width = this.width;
     this.canvas.height = this.height;
 
-    this.context = this.canvas.getContext('2d')!;
+    //  2~100 까지 random하게 positions에 Vector2를 push.
+
+    this.context = this.canvas.getContext("2d")!;
     this.startTime = Date.now();
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
   }
+
+  // bezierCurve(positions: Vector[], t: number): void {
+  //   // t: time (0 ~ 1)
+  //   // recursive solution
+  // }
 
   frameRequest = () => {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
@@ -41,9 +49,9 @@ export default class App {
     this.canvas.style.backgroundColor = `white`;
 
     // 2. draw bezier curve
-  }
+  };
 }
 
-window.addEventListener('load', () => {
+window.addEventListener("load", () => {
   new App();
 });
