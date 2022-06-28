@@ -86,6 +86,7 @@ export default class App {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
     const currentTime = Date.now();
     this.delta = (currentTime - this.startTime) * 0.001; // ms => s
+    console.log(this.delta);
 
     if (this.delta > 1) {
       cancelAnimationFrame(this.frameRequestHandle);
