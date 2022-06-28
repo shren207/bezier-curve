@@ -32,12 +32,24 @@ export default class App {
     this.context = this.canvas.getContext("2d")!;
     this.startTime = Date.now();
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
+
+    this.positions.push(
+      new Vector(this.randomX(), this.randomY()),
+      new Vector(this.randomX(), this.randomY()),
+      new Vector(this.randomX(), this.randomY()),
+      new Vector(this.randomX(), this.randomY()),
+      new Vector(this.randomX(), this.randomY()),
+      new Vector(this.randomX(), this.randomY())
+    );
   }
 
-  // bezierCurve(positions: Vector[], t: number): void {
-  //   // t: time (0 ~ 1)
-  //   // recursive solution
-  // }
+  randomX(): number {
+    return Math.floor(Math.random() * this.canvas.width);
+  }
+  randomY(): number {
+    return Math.floor(Math.random() * this.canvas.height);
+  }
+  // bezierCurve(positions: Vector[], t: number): void {}
 
   frameRequest = () => {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
@@ -47,6 +59,13 @@ export default class App {
 
     // 1. fill canvas background
     this.canvas.style.backgroundColor = `white`;
+
+    this.positions.forEach((position, index) => {
+      this.context.beginPath();
+      this.context.arc(position.x, position.y, 5, 0, Math.PI * 2);
+      this.context.fillStyle = `black`;
+      this.context.fill();
+    });
 
     // 2. draw bezier curve
   };
