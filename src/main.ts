@@ -31,8 +31,6 @@ export default class App {
     this.canvas.height = this.height;
     this.canvas.style.backgroundColor = "white";
 
-    //  3~20 까지 random하게 positions에 Vector를 push.
-
     this.context = this.canvas.getContext("2d")!;
 
     this.startTime = Date.now();
@@ -42,11 +40,26 @@ export default class App {
       this.positions.push(new Vector(this.randomX(), this.randomY()));
     }
 
-    this.positions.forEach((position) => {
+    this.positions.forEach((position, index) => {
       this.context.beginPath();
       this.context.arc(position.x, position.y, 5, 0, Math.PI * 2);
       this.context.fillStyle = `black`;
       this.context.fill();
+
+      if (index + 1 === this.positions.length) {
+        this.context.strokeStyle = "black";
+        this.context.lineWidth = 1;
+        return;
+      }
+      this.context.beginPath();
+      this.context.moveTo(this.positions[index].x, this.positions[index].y);
+      this.context.lineTo(
+        this.positions[index + 1].x,
+        this.positions[index + 1].y
+      );
+      this.context.strokeStyle = `red`;
+      this.context.lineWidth = 2;
+      this.context.stroke();
     });
     this.previousX = this.positions[0].x;
     this.previousY = this.positions[0].y;
@@ -89,8 +102,6 @@ export default class App {
     this.context.stroke();
     this.previousX = x;
     this.previousY = y;
-
-    // 2. draw bezier curve
   };
 }
 
