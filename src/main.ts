@@ -31,18 +31,17 @@ export default class App {
     this.canvas.height = this.height;
     this.canvas.style.backgroundColor = "white";
 
-    //  2~100 까지 random하게 positions에 Vector2를 push.
+    //  3~20 까지 random하게 positions에 Vector를 push.
 
     this.context = this.canvas.getContext("2d")!;
 
     this.startTime = Date.now();
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
 
-    this.positions.push(
-      new Vector(this.randomX(), this.randomY()),
-      new Vector(this.randomX(), this.randomY()),
-      new Vector(this.randomX(), this.randomY())
-    );
+    for (let i = 0; i < Math.floor(Math.random() * 20) + 3; i++) {
+      this.positions.push(new Vector(this.randomX(), this.randomY()));
+    }
+
     this.positions.forEach((position) => {
       this.context.beginPath();
       this.context.arc(position.x, position.y, 5, 0, Math.PI * 2);
@@ -59,41 +58,37 @@ export default class App {
   randomY(): number {
     return Math.floor(Math.random() * this.canvas.height);
   }
-  bezierCurve(t: number): void {
-    // recursive solution is necessary
-    // if (positions.length < 2) {
-    //   return;
-    // }
+  bezierCurve(positions: Array<Vector>, t: number): Vector {
+    if (positions.length === 1) return positions[0];
 
-    // let newPositions: Vector[] = [];
-    let x =
-      (1 - t) * (1 - t) * this.positions[0].x +
-      2 * (1 - t) * t * this.positions[1].x +
-      t * t * this.positions[2].x;
-    let y =
-      (1 - t) * (1 - t) * this.positions[0].y +
-      2 * (1 - t) * t * this.positions[1].y +
-      t * t * this.positions[2].y;
-    this.context.beginPath();
-    this.context.moveTo(this.previousX, this.previousY);
-    this.context.lineTo(x, y);
-    this.context.stroke();
-    this.previousX = x;
-    this.previousY = y;
+    const newPositions: Array<Vector> = [];
+    positions.forEach((position, index) => {
+      if (index + 1 === positions.length) return;
+      const x = (1 - t) * position.x + t * positions[index + 1].x;
+      const y = (1 - t) * position.y + t * positions[index + 1].y;
+      newPositions.push(new Vector(x, y));
+    });
+    return this.bezierCurve(newPositions, t);
   }
 
   frameRequest = () => {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
     const currentTime = Date.now();
     this.delta = (currentTime - this.startTime) * 0.001; // ms => s
-    console.log(this.delta);
 
     if (this.delta > 1) {
       cancelAnimationFrame(this.frameRequestHandle);
       return;
     }
 
-    this.bezierCurve(this.delta);
+    const { x, y } = this.bezierCurve(this.positions, this.delta);
+
+    this.context.beginPath();
+    this.context.moveTo(this.previousX, this.previousY);
+    this.context.lineTo(x, y);
+    this.context.stroke();
+    this.previousX = x;
+    this.previousY = y;
 
     // 2. draw bezier curve
   };
