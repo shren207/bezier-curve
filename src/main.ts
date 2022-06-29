@@ -100,13 +100,7 @@ export default class App {
     this.progress += this.delta * 0.1;
     if (this.progress > 1) {
       this.progress = 1;
-      //
     }
-
-    // if (this.delta > 1) {
-    //   cancelAnimationFrame(this.frameRequestHandle);
-    //   return;
-    // }
 
     const { x, y } = this.bezierCurve(this.positions, this.progress);
 
