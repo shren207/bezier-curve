@@ -6,4 +6,11 @@ export default class Vector {
     this.x = x;
     this.y = y;
   }
+
+  lerp(other: Vector, t: number) {
+    return new Vector(
+      this.x + (other.x - this.x) * t,
+      this.y + (other.y - this.y) * t
+    );
+  }
 }

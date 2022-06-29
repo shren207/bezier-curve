@@ -21,6 +21,8 @@ export default class App {
   frameRequestHandle: number;
   positions: Vector[] = [];
 
+  progress: number = 0;
+
   previousX: number;
   previousY: number;
 
@@ -75,28 +77,38 @@ export default class App {
     if (positions.length === 1) return positions[0];
 
     const newPositions: Array<Vector> = [];
-    positions.forEach((position, index) => {
-      if (index + 1 === positions.length) return;
-      const x = (1 - t) * position.x + t * positions[index + 1].x;
-      const y = (1 - t) * position.y + t * positions[index + 1].y;
-      newPositions.push(new Vector(x, y));
-    });
+    // positions.forEach((position, index) => {
+    //   if (index + 1 === positions.length) return;
+    //   const x = (1 - t) * position.x + t * positions[index + 1].x;
+    //   const y = (1 - t) * position.y + t * positions[index + 1].y;
+    //   newPositions.push(new Vector(x, y));
+    // });
+    for (let i = 0; i < positions.length - 1; i++) {
+      newPositions.push(positions[i].lerp(positions[i + 1], t));
+    }
+
     return this.bezierCurve(newPositions, t);
   }
 
-  frameRequest = () => {
+  frameRequest = (t: number) => {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
     const currentTime = Date.now();
 
     // feedback : 여기 변수명을 delta로 하는 것이 옳은 지?
     this.delta = (currentTime - this.startTime) * 0.001; // ms => s
-
-    if (this.delta > 1) {
-      cancelAnimationFrame(this.frameRequestHandle);
-      return;
+    this.startTime = currentTime;
+    this.progress += this.delta * 0.1;
+    if (this.progress > 1) {
+      this.progress = 1;
+      //
     }
 
-    const { x, y } = this.bezierCurve(this.positions, this.delta);
+    // if (this.delta > 1) {
+    //   cancelAnimationFrame(this.frameRequestHandle);
+    //   return;
+    // }
+
+    const { x, y } = this.bezierCurve(this.positions, this.progress);
 
     this.context.beginPath();
     this.context.moveTo(this.previousX, this.previousY);
@@ -104,6 +116,9 @@ export default class App {
     this.context.stroke();
     this.previousX = x;
     this.previousY = y;
+
+    console.log(this.delta);
+    console.log(t);
   };
 }
 
