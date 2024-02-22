@@ -22,6 +22,7 @@ export default class App {
   positions: Vector[] = [];
 
   progress: number = 0;
+  // * 나는 경과시간을 표시하기 위해서 그냥 delta를 사용하였는데, progress등의 변수를 새롭게 정의하여 사용하는 편이 더 좋다.
 
   previousX: number;
   previousY: number;
@@ -77,6 +78,7 @@ export default class App {
     if (positions.length === 1) return positions[0];
 
     const newPositions: Array<Vector> = [];
+    // * 나는 재귀로직을 여기다가 작성하였는데, 이러한 로직은 Vector에 따로 method로 정의하는 것이 더 좋다.
     // positions.forEach((position, index) => {
     //   if (index + 1 === positions.length) return;
     //   const x = (1 - t) * position.x + t * positions[index + 1].x;
